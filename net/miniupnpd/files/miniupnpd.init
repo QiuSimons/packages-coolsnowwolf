@@ -187,6 +187,8 @@ upnpd() {
 
 	if [ -n "$ifname" ]; then
 		# start firewall
+		nft delete chain ip6 filter MINIUPNPD 2>/dev/null
+		nft list table ip6 filter 2>/dev/null | grep -q '^\s*}$' && nft delete table ip6 filter
 		iptables -L MINIUPNPD >/dev/null 2>/dev/null || fw3 reload
 	else
 		logger -t "upnp daemon" "external interface not found, not starting"
