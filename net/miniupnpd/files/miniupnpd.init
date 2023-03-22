@@ -192,6 +192,8 @@ upnpd() {
 		logger -t "upnp daemon" "external interface not found, not starting"
 	fi
 	
+	nft delete chain ip6 filter MINIUPNPD 2>/dev/null
+	nft list table ip6 filter 2>/dev/null | grep -q '^\s*}$' && nft delete table ip6 filter
 	procd_open_instance
 	procd_set_param command "$PROG"
 	procd_set_param respawn
